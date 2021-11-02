@@ -112,7 +112,71 @@ class StudentController extends Controller
 
     public function delete($id)
     {
-       
+
+        try {
+
+            $sutdent = Student::findOrFail($id);
+            $sutdent->delete();
+
+            return response([
+
+                'message' =>'Data Delete Successfully ',
+                'student' => $sutdent,
+
+            ]);
+
+        } catch (\Throwable $th) {
+
+            return response([
+                'message'=> $th->getMessage()
+            ]);
+        }
+    }
+
+    // For file or image upload in Databse using API
+
+
+    public function FileUpload(Request $request)
+    {
+
+        try {
+
+        if ($request->hasFile('s_image')) {
+
+            $file = $request->file('s_image');
+            $filename = $file->getClientOriginalName();
+            $renameimage = date('Mis').'-'. $filename;
+            $file->move(public_path('upload'),$renameimage);
+
+
+
+            return response([
+                'message' => 'upload Success ',
+                'store' =>  $renameimage
+            ]);
+
+
+
+        }else{
+
+
+            return 'invalide File Formet';
+
+        }
+
+
+        } catch (\Throwable $th) {
+            return response([
+                'message' =>$th->getMessage()
+            ]);
+
+
+
+        }
+
+
+
+
     }
 
 
